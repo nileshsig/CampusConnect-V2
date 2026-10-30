@@ -106,6 +106,7 @@ export default function NoticesPage() {
 
   const canPublish =
     currentUser.role === "admin" ||
+    currentUser.role === "principal" ||
     (currentUser.role === "faculty" && currentUser.can_publish_notices);
 
   return (
@@ -269,15 +270,32 @@ export default function NoticesPage() {
                     )}
                   </div>
 
+                  {/* Resolution restricted: only available to the one who created it (or Principal/Admin) */}
                   {item.status === "open" && (
-                    <div className="mt-4 pt-3 border-t border-line flex justify-end">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        onClick={() => resolveLostFound(item.id)}
-                      >
-                        Mark claimed / resolved
-                      </Button>
+                    <div className="mt-4 pt-3 border-t border-line flex items-center justify-between text-xs">
+                      {item.reporter_id === currentUser.id ||
+                      currentUser.role === "principal" ||
+                      currentUser.role === "admin" ? (
+                        <>
+                          <span className="text-muted">You reported this item</span>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => {
+                              const res = resolveLostFound(item.id);
+                              if (!res.success && res.error) {
+                                alert(res.error);
+                              }
+                            }}
+                          >
+                            Mark claimed / resolved
+                          </Button>
+                        </>
+                      ) : (
+                        <span className="text-muted italic">
+                          Resolution restricted to the person who reported this item.
+                        </span>
+                      )}
                     </div>
                   )}
                 </Card>
@@ -286,7 +304,7 @@ export default function NoticesPage() {
           </div>
         )}
 
-        {/* Publish Notice Modal (FR-N6) */}
+        {/* Publish Notice Modal */}
         <Modal
           isOpen={publishModalOpen}
           onClose={() => setPublishModalOpen(false)}
@@ -354,7 +372,7 @@ export default function NoticesPage() {
           </form>
         </Modal>
 
-        {/* Report Lost/Found Modal (FR-N7) */}
+        {/* Report Lost/Found Modal */}
         <Modal
           isOpen={lfModalOpen}
           onClose={() => setLfModalOpen(false)}

@@ -96,7 +96,7 @@ export default function UsersAdminPage() {
                     >
                       <option value="student">Student</option>
                       <option value="faculty">Faculty</option>
-                      <option value="security">Security</option>
+                      <option value="principal">Principal</option>
                       <option value="admin">Admin</option>
                     </select>
                   </td>

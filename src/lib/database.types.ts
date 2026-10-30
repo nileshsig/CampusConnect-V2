@@ -6,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export type UserRole = 'student' | 'faculty' | 'admin' | 'security';
+export type UserRole = 'student' | 'faculty' | 'admin' | 'principal';
 export type IncidentStatus = 'submitted' | 'acknowledged' | 'responder_assigned' | 'in_progress' | 'resolved' | 'closed';
 export type IncidentCategory = 'medical' | 'personal_safety' | 'harassment' | 'accident' | 'security_issue' | 'other';
 export type DeliveryState = 'saved' | 'queued' | 'delivered' | 'acknowledged' | 'failed';
@@ -78,6 +78,7 @@ export interface Notice {
 export interface LostFoundItem {
   id: string;
   reporter_id: string;
+  reporter_name?: string;
   kind: 'lost' | 'found';
   item: string;
   details?: string | null;
@@ -85,6 +86,15 @@ export interface LostFoundItem {
   image_path?: string | null;
   status: 'open' | 'claimed' | 'resolved';
   created_at: string;
+}
+
+export interface EventRegistrationDetails {
+  roll_no: string;
+  department: string;
+  semester: number;
+  phone: string;
+  emergency_contact: string;
+  note?: string;
 }
 
 export interface Event {
@@ -101,6 +111,16 @@ export interface Event {
   registered_count?: number;
   user_rsvp_status?: 'going' | 'waitlist' | null;
   category?: string | null;
+  registration_details?: Record<string, EventRegistrationDetails>;
+}
+
+export interface ClubJoinDetails {
+  roll_no: string;
+  department: string;
+  semester: number;
+  phone: string;
+  reason: string;
+  skills: string;
 }
 
 export interface Club {
@@ -188,4 +208,83 @@ export interface ChatThread {
   last_message?: string;
   updated_at: string;
   unread_count: number;
+}
+
+// Anti-Ragging Complaints
+export interface RaggingComplaint {
+  id: string;
+  public_id: string;
+  reporter_id: string;
+  is_anonymous: boolean;
+  reporter_name?: string;
+  reporter_roll_no?: string;
+  department?: string;
+  incident_date: string;
+  location: string;
+  accused_details: string;
+  description: string;
+  witness_details?: string;
+  status: 'submitted' | 'under_investigation' | 'action_taken' | 'resolved' | 'closed';
+  created_at: string;
+  action_notes?: string;
+}
+
+// Mental Health & Wellness
+export interface MentalHealthBooking {
+  id: string;
+  student_id: string;
+  student_name: string;
+  booking_type: 'counselor' | 'peer_buddy' | 'anonymous_chat';
+  preferred_slot: string;
+  notes?: string;
+  status: 'confirmed' | 'completed' | 'cancelled';
+  created_at: string;
+}
+
+export interface MoodCheckIn {
+  id: string;
+  student_id: string;
+  date: string;
+  mood: 'calm' | 'good' | 'stressed' | 'overwhelmed';
+  note?: string;
+}
+
+// Contacts & Faculty Directory
+export interface FacultyContact {
+  id: string;
+  name: string;
+  designation: string;
+  department: string;
+  email: string;
+  phone: string;
+  room_number: string;
+  office_hours: string;
+  subjects: string[];
+}
+
+// Campus Documents
+export interface CampusDocument {
+  id: string;
+  title: string;
+  category: 'placement' | 'study_material' | 'regulations' | 'forms';
+  description: string;
+  file_format: string;
+  file_size: string;
+  uploaded_by: string;
+  updated_at: string;
+}
+
+// Student Fee Record
+export interface StudentFeeRecord {
+  id: string;
+  student_id: string;
+  student_roll_no: string;
+  semester: number;
+  academic_year: string;
+  fee_type: 'tuition' | 'hostel' | 'examination' | 'library';
+  amount: number;
+  status: 'paid' | 'pending' | 'overdue';
+  due_date: string;
+  receipt_number?: string;
+  paid_at?: string;
 }

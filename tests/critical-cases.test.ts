@@ -5,7 +5,7 @@ import { UserRole } from "../src/lib/database.types";
 describe("Campus Connect Critical Security & Business Rules (T1 - T15)", () => {
   it("T1 & T2: Enforces role guard rejecting students from admin operations", () => {
     const studentRole: UserRole = "student";
-    const allowedForAdmin: UserRole[] = ["admin"];
+    const allowedForAdmin: UserRole[] = ["admin", "principal"];
 
     expect(requireRole(studentRole, allowedForAdmin)).toBe(false);
 
@@ -15,11 +15,21 @@ describe("Campus Connect Critical Security & Business Rules (T1 - T15)", () => {
     expect(studentPerms.canViewAllIncidents).toBe(false);
   });
 
-  it("T4: Security officer has restricted permissions vs Admin", () => {
-    const securityPerms = getRolePermissions("security");
-    expect(securityPerms.canAssignResponder).toBe(false);
-    expect(securityPerms.canManageUsers).toBe(false);
-    expect(securityPerms.canAcknowledgeIncident).toBe(true);
+  it("T3: Principal role has executive oversight and anti-ragging permissions", () => {
+    const principalPerms = getRolePermissions("principal");
+    expect(principalPerms.canAssignResponder).toBe(true);
+    expect(principalPerms.canManageUsers).toBe(true);
+    expect(principalPerms.canAcknowledgeIncident).toBe(true);
+    expect(principalPerms.canManageRaggingComplaints).toBe(true);
+    expect(principalPerms.canCreateEvent).toBe(true);
+  });
+
+  it("T4: Student role is strictly blocked from creating events", () => {
+    const studentPerms = getRolePermissions("student");
+    expect(studentPerms.canCreateEvent).toBe(false);
+
+    const facultyPerms = getRolePermissions("faculty");
+    expect(facultyPerms.canCreateEvent).toBe(true);
   });
 
   it("T5: SOS creation accepts manual location when location permission is not granted", () => {
@@ -37,7 +47,6 @@ describe("Campus Connect Critical Security & Business Rules (T1 - T15)", () => {
   });
 
   it("T6 & FR-S11: Truthful delivery state never marks delivered unless confirmed", () => {
-    // Initial state must be 'saved', never 'delivered'
     const initialState = "saved";
     expect(initialState).not.toBe("delivered");
   });
@@ -60,7 +69,6 @@ describe("Campus Connect Critical Security & Business Rules (T1 - T15)", () => {
     const newRsvpStatus = currentGoing >= capacity ? "waitlist" : "going";
     expect(newRsvpStatus).toBe("waitlist");
 
-    // When someone cancels, spots open
     const updatedCount = currentGoing - 1;
     const nextRsvpStatus = updatedCount >= capacity ? "waitlist" : "going";
     expect(nextRsvpStatus).toBe("going");

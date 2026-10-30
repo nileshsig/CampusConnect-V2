@@ -15,7 +15,11 @@ import {
   User,
   Phone,
   AlertTriangle,
-  ChevronDown,
+  HeartHandshake,
+  BookOpen,
+  CreditCard,
+  Contact,
+  FolderOpen,
 } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { UserRole } from "@/lib/database.types";
@@ -35,6 +39,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           { href: "/student", label: "Home", icon: User },
           { href: "/today", label: "Today", icon: Calendar },
           { href: "/notices", label: "Notices", icon: Bell },
+          { href: "/ragging", label: "Anti-Ragging", icon: AlertTriangle },
+          { href: "/wellness", label: "Mental Health", icon: HeartHandshake },
+          { href: "/directory", label: "Faculty contacts", icon: Contact },
+          { href: "/documents", label: "Documents", icon: FolderOpen },
+          { href: "/fees", label: "My fees", icon: CreditCard },
           { href: "/events", label: "Events", icon: Sparkles },
           { href: "/clubs", label: "Clubs", icon: Users },
           { href: "/messages", label: "Messages", icon: MessageSquare },
@@ -45,20 +54,31 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           { href: "/faculty", label: "Home", icon: User },
           { href: "/today", label: "My classes", icon: Calendar },
           { href: "/notices", label: "Notices", icon: Bell },
+          { href: "/directory", label: "Faculty contacts", icon: Contact },
+          { href: "/documents", label: "Documents", icon: FolderOpen },
+          { href: "/ragging", label: "Anti-Ragging", icon: AlertTriangle },
           { href: "/messages", label: "Messages", icon: MessageSquare },
           { href: "/safety", label: "Safety", icon: ShieldAlert },
         ];
-      case "security":
+      case "principal":
         return [
+          { href: "/principal", label: "Principal desk", icon: User },
+          { href: "/ragging", label: "Anti-Ragging", icon: AlertTriangle },
           { href: "/security", label: "Alerts queue", icon: ShieldAlert },
+          { href: "/directory", label: "Faculty contacts", icon: Contact },
+          { href: "/documents", label: "Documents", icon: FolderOpen },
+          { href: "/fees", label: "Fee records", icon: CreditCard },
           { href: "/notices", label: "Notices", icon: Bell },
-          { href: "/messages", label: "Messages", icon: MessageSquare },
-          { href: "/safety", label: "Safety", icon: ShieldAlert },
+          { href: "/safety", label: "Safety alerts", icon: ShieldAlert },
         ];
       case "admin":
         return [
           { href: "/admin", label: "Overview", icon: BarChart2 },
           { href: "/admin/users", label: "Users", icon: Users },
+          { href: "/fees", label: "Fee records", icon: CreditCard },
+          { href: "/ragging", label: "Anti-Ragging", icon: AlertTriangle },
+          { href: "/directory", label: "Faculty contacts", icon: Contact },
+          { href: "/documents", label: "Documents", icon: FolderOpen },
           { href: "/notices", label: "Notices", icon: Bell },
           { href: "/events", label: "Events", icon: Sparkles },
           { href: "/clubs", label: "Clubs", icon: Users },
@@ -73,17 +93,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-paper text-text">
-      {/* Pilot Warning Top Banner (FR-S13 & Pilot Notice requirement) */}
+      {/* Pilot Warning Top Banner */}
       <div className="bg-ink text-surface text-xs py-2 px-4 border-b border-line flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2 max-w-2xl">
           <AlertTriangle className="w-4 h-4 text-accent shrink-0" />
           <span>
-            <strong>Campus Connect Pilot:</strong> Until the university formally adopts this app, also call campus security helpline in an emergency.
+            <strong>Campus Connect:</strong> Vinoba Bhave University official student and faculty life portal.
           </span>
         </div>
         <div className="flex items-center gap-4 text-xs font-semibold tabular-nums">
           <a href="tel:06546261234" className="hover:underline flex items-center gap-1 text-surface">
-            <Phone className="w-3.5 h-3.5" /> Security: 06546-261234
+            <Phone className="w-3.5 h-3.5" /> Security & Principal Helpline: 06546-261234
+          </a>
+          <a href="tel:18001805522" className="hover:underline text-surface font-semibold">
+            Anti-Ragging Toll-Free: 1800-180-5522
           </a>
           <a href="tel:112" className="hover:underline text-surface font-bold">
             Emergency: 112
@@ -113,10 +136,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               {language === "en" ? "हिन्दी" : "English"}
             </button>
 
-            {/* Role switcher for presentation (FR-X10) */}
+            {/* Role switcher (Replaced Officer Singh with Principal) */}
             <div className="flex items-center gap-1.5 bg-paper p-1 rounded-input border border-line">
               <span className="text-xs text-muted font-medium pl-1 hidden md:inline">Account:</span>
-              {(["student", "faculty", "security", "admin"] as UserRole[]).map((r) => (
+              {(["student", "faculty", "principal", "admin"] as UserRole[]).map((r) => (
                 <button
                   key={r}
                   onClick={() => switchRole(r)}
@@ -128,16 +151,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 >
                   {r === "student" && "Asha (Student)"}
                   {r === "faculty" && "Dr. Prasad (Faculty)"}
-                  {r === "security" && "Officer Singh"}
+                  {r === "principal" && "Prof. Sharma (Principal)"}
                   {r === "admin" && "Admin"}
                 </button>
               ))}
             </div>
 
-            {/* SOS Primary Button in Header */}
+            {/* SOS Primary Button */}
             <button
               onClick={() => setSosModalOpen(true)}
-              className="bg-emergency text-surface font-semibold text-xs px-3.5 py-2 rounded-button flex items-center gap-1.5 hover:bg-opacity-90 active:bg-opacity-80 transition-colors"
+              className="bg-emergency text-surface font-semibold text-xs px-3.5 py-2 rounded-button flex items-center gap-1.5 hover:bg-opacity-95 active:bg-opacity-80 transition-colors"
             >
               <ShieldAlert className="w-4 h-4" />
               <span>Send alert</span>
@@ -148,12 +171,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Main Body with Sidebar on Desktop */}
       <div className="flex-1 flex max-w-7xl w-full mx-auto">
-        {/* Desktop Sidebar (Fixed 240px width on desktop) */}
-        <aside className="hidden md:block w-60 border-r border-line bg-surface p-4 shrink-0">
+        {/* Desktop Sidebar */}
+        <aside className="hidden md:block w-64 border-r border-line bg-surface p-4 shrink-0 overflow-y-auto max-h-[calc(100vh-100px)]">
           <div className="p-3 mb-4 rounded-card border border-line bg-paper">
             <p className="text-xs text-muted">Signed in as</p>
             <p className="text-sm font-semibold text-ink truncate">{currentUser.full_name}</p>
-            <p className="text-xs text-muted capitalize">{currentUser.role}</p>
+            <p className="text-xs text-muted capitalize">Account type: {currentUser.role}</p>
           </div>
 
           <nav className="space-y-1">
@@ -164,7 +187,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center justify-between px-3 py-2.5 rounded-button text-sm font-medium transition-colors ${
+                  className={`flex items-center justify-between px-3 py-2 rounded-button text-sm font-medium transition-colors ${
                     isActive
                       ? "bg-[#EEF2FB] text-accent border border-line"
                       : "text-text hover:bg-paper"
@@ -189,7 +212,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <main className="flex-1 p-4 md:p-8 min-w-0 pb-20 md:pb-8">{children}</main>
       </div>
 
-      {/* Mobile Floating SOS Button (FR-S1) */}
+      {/* Mobile Floating SOS Button */}
       <div className="md:hidden fixed bottom-16 right-4 z-40">
         <button
           onClick={() => setSosModalOpen(true)}
@@ -200,8 +223,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </button>
       </div>
 
-      {/* Mobile Bottom Tab Navigation (FR-S1 & Section 6.7) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-14 bg-surface border-t border-line flex items-center justify-around z-30 px-2">
+      {/* Mobile Bottom Tab Navigation */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-14 bg-surface border-t border-line flex items-center justify-around z-30 px-2 overflow-x-auto">
         {navLinks.slice(0, 5).map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -220,7 +243,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         })}
       </nav>
 
-      {/* SOS Multi-step Flow Dialog Modal (Section 6.5) */}
       <SOSFlowModal isOpen={sosModalOpen} onClose={() => setSosModalOpen(false)} />
     </div>
   );

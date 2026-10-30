@@ -12,6 +12,10 @@ import {
   Users,
   AlertTriangle,
   ArrowRight,
+  HeartHandshake,
+  FolderOpen,
+  CreditCard,
+  Contact,
 } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { AppShell } from "@/components/shell/app-shell";
@@ -21,11 +25,15 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { SOSFlowModal } from "@/components/safety/sos-flow-modal";
 
 export default function StudentHomePage() {
-  const { currentUser, timetable, notices, events, clubs, activeIncident } = useApp();
+  const { currentUser, timetable, notices, events, clubs, activeIncident, feeRecords } = useApp();
   const [sosOpen, setSosOpen] = useState(false);
 
   const urgentNotice = notices.find((n) => n.is_urgent);
   const myClubs = clubs.filter((c) => c.user_membership_status === "active");
+
+  const myPendingFees = feeRecords.filter(
+    (f) => f.student_id === currentUser.id && f.status !== "paid"
+  );
 
   return (
     <AppShell>
@@ -72,7 +80,60 @@ export default function StudentHomePage() {
           </div>
         )}
 
-        {/* Urgent Notice Banner (FR-N3) */}
+        {/* Quick Student Access Bar */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <Link href="/ragging">
+            <Card className="p-3.5 hover:border-accent transition-colors flex items-center gap-3">
+              <div className="p-2 rounded bg-[#FDF2F2] text-emergency">
+                <AlertTriangle className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-ink">Anti-Ragging</p>
+                <p className="text-[11px] text-muted">Confidential report</p>
+              </div>
+            </Card>
+          </Link>
+
+          <Link href="/wellness">
+            <Card className="p-3.5 hover:border-accent transition-colors flex items-center gap-3">
+              <div className="p-2 rounded bg-[#EEF2FB] text-accent">
+                <HeartHandshake className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-ink">Mental Health</p>
+                <p className="text-[11px] text-muted">Counselor & calm tools</p>
+              </div>
+            </Card>
+          </Link>
+
+          <Link href="/directory">
+            <Card className="p-3.5 hover:border-accent transition-colors flex items-center gap-3">
+              <div className="p-2 rounded bg-paper text-ink">
+                <Contact className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-ink">Faculty Contacts</p>
+                <p className="text-[11px] text-muted">Phone & office hours</p>
+              </div>
+            </Card>
+          </Link>
+
+          <Link href="/fees">
+            <Card className="p-3.5 hover:border-accent transition-colors flex items-center gap-3">
+              <div className="p-2 rounded bg-paper text-ink">
+                <CreditCard className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-ink">My Fees</p>
+                <p className="text-[11px] text-muted">
+                  {myPendingFees.length > 0 ? "1 pending payment" : "All cleared"}
+                </p>
+              </div>
+            </Card>
+          </Link>
+        </div>
+
+        {/* Urgent Notice Banner */}
         {urgentNotice && (
           <div className="p-4 bg-[#FDF2F2] border border-[#F8D7DA] rounded-card">
             <div className="flex items-center gap-2 text-xs font-bold text-emergency uppercase tracking-wider mb-1">
@@ -95,7 +156,7 @@ export default function StudentHomePage() {
 
         {/* Two Column Grid: Academics Today vs Community Updates */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Today's Timetable (FR-A1, FR-A2) */}
+          {/* Today's Timetable */}
           <div className="lg:col-span-7 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -150,7 +211,7 @@ export default function StudentHomePage() {
 
           {/* Events and Clubs Sidebar */}
           <div className="lg:col-span-5 space-y-6">
-            {/* Upcoming Events (FR-E1) */}
+            {/* Upcoming Events */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -176,7 +237,7 @@ export default function StudentHomePage() {
                     </span>
                     <Link href="/events">
                       <span className="text-accent font-semibold hover:underline">
-                        {evt.user_rsvp_status === "going" ? "Registered" : "Register"}
+                        {evt.user_rsvp_status === "going" ? "Registered" : "Register with details"}
                       </span>
                     </Link>
                   </div>
@@ -184,7 +245,7 @@ export default function StudentHomePage() {
               ))}
             </div>
 
-            {/* My Clubs (FR-C1) */}
+            {/* My Clubs */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">

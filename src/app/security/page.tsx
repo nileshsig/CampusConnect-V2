@@ -31,7 +31,7 @@ export default function SecurityResponderPage() {
   };
 
   const handleResolve = (id: string) => {
-    updateAlertStatus(id, "resolved", "Resolved on site by Security Responder.");
+    updateAlertStatus(id, "resolved", "Resolved on site by Designated Responder.");
   };
 
   const handleAddNote = (id: string) => {
@@ -49,11 +49,11 @@ export default function SecurityResponderPage() {
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-accent" />
               <h1 className="text-xl font-heading font-bold text-ink">
-                Security Officer Dispatch Console
+                Campus Safety & Incident Console
               </h1>
             </div>
             <p className="text-xs text-muted mt-1">
-              Logged in: {currentUser.full_name} • Central Post Gate 1 Shift
+              Logged in: {currentUser.full_name} • Live Dispatch Queue
             </p>
           </div>
           <div className="flex items-center gap-3 text-xs">
@@ -66,7 +66,7 @@ export default function SecurityResponderPage() {
         {/* Alerts List */}
         <div className="space-y-4">
           <h2 className="text-sm font-heading font-bold text-ink uppercase tracking-wider">
-            Queue of incidents
+            Queue of active alerts
           </h2>
 
           {pendingAlerts.length > 0 ? (
@@ -113,7 +113,7 @@ export default function SecurityResponderPage() {
                     )}
                   </div>
 
-                  {/* Notes entered by officer */}
+                  {/* Notes entered by responder */}
                   {alertNotes.length > 0 && (
                     <div className="p-3 bg-paper rounded border border-line space-y-1.5 text-xs">
                       <span className="font-semibold text-ink block">Responder Notes:</span>
@@ -125,7 +125,7 @@ export default function SecurityResponderPage() {
                     </div>
                   )}
 
-                  {/* Actions according to FR-S10 */}
+                  {/* Actions */}
                   <div className="pt-3 border-t border-line flex flex-wrap items-center justify-between gap-2">
                     <Button
                       variant="ghost"
@@ -195,7 +195,7 @@ export default function SecurityResponderPage() {
                 value={noteText}
                 onChange={(e) => setNoteText(e.target.value)}
                 rows={3}
-                placeholder="e.g. Reached location at 10:44. Administered antiseptic bandage..."
+                placeholder="e.g. Attending at location with medical support..."
                 className="w-full p-2.5 bg-surface border border-line rounded-input text-sm text-text focus:outline-none focus:border-accent"
               />
             </div>

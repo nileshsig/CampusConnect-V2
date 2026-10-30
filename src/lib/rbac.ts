@@ -9,18 +9,27 @@ export interface PermissionCheck {
   canManageUsers: boolean;
   canViewAnalytics: boolean;
   canPostAcademicUpdate: boolean;
+  canManageRaggingComplaints: boolean;
 }
 
-export function getRolePermissions(role: UserRole, flags?: { canPublishNotices?: boolean; isClubLead?: boolean }): PermissionCheck {
+export function getRolePermissions(
+  role: UserRole,
+  flags?: { canPublishNotices?: boolean; isClubLead?: boolean }
+): PermissionCheck {
   return {
-    canViewAllIncidents: role === "admin" || role === "security",
-    canAssignResponder: role === "admin",
-    canAcknowledgeIncident: role === "admin" || role === "security",
-    canPublishNotice: role === "admin" || (role === "faculty" && Boolean(flags?.canPublishNotices)),
-    canCreateEvent: role === "admin" || Boolean(flags?.isClubLead),
-    canManageUsers: role === "admin",
-    canViewAnalytics: role === "admin" || role === "security",
-    canPostAcademicUpdate: role === "faculty" || role === "admin",
+    canViewAllIncidents: role === "admin" || role === "principal",
+    canAssignResponder: role === "admin" || role === "principal",
+    canAcknowledgeIncident: role === "admin" || role === "principal",
+    canPublishNotice:
+      role === "admin" ||
+      role === "principal" ||
+      (role === "faculty" && Boolean(flags?.canPublishNotices)),
+    // Students can NEVER create events!
+    canCreateEvent: role === "admin" || role === "principal" || role === "faculty",
+    canManageUsers: role === "admin" || role === "principal",
+    canViewAnalytics: role === "admin" || role === "principal",
+    canPostAcademicUpdate: role === "faculty" || role === "admin" || role === "principal",
+    canManageRaggingComplaints: role === "admin" || role === "principal",
   };
 }
 

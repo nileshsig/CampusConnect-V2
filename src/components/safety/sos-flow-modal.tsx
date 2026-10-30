@@ -273,7 +273,7 @@ export function SOSFlowModal({
                 </span>
               </div>
 
-              {/* Exact status copy from Section 6.5 */}
+              {/* Exact status copy */}
               <div className="my-3">
                 {displayedIncident.delivery === "saved" && (
                   <p className="text-sm font-semibold text-muted">
@@ -292,7 +292,7 @@ export function SOSFlowModal({
                 )}
                 {displayedIncident.status === "acknowledged" && (
                   <p className="text-sm font-semibold text-accent">
-                    Officer Singh has seen your alert and is on the way.
+                    Security responder has seen your alert and is on the way.
                   </p>
                 )}
                 {displayedIncident.delivery === "failed" && (
@@ -318,7 +318,7 @@ export function SOSFlowModal({
               <Timeline items={incidentTimeline} />
             </div>
 
-            {/* Always visible fallback helpline phone calls (FR-S13 & Section 6.5) */}
+            {/* Always visible fallback helpline phone calls */}
             <div className="pt-3 border-t border-line space-y-2">
               <p className="text-xs text-muted">
                 Need immediate response or network is weak? Use these helplines directly:

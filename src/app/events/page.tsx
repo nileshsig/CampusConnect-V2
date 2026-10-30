@@ -10,6 +10,7 @@ import {
   Download,
   Plus,
   CheckCircle,
+  FileCheck,
 } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { AppShell } from "@/components/shell/app-shell";
@@ -17,11 +18,15 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
+import { Event } from "@/lib/database.types";
 
 export default function EventsPage() {
-  const { events, currentUser, toggleRsvp, createEvent, clubs } = useApp();
-  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const { events, currentUser, registerForEvent, cancelEventRegistration, createEvent, clubs } =
+    useApp();
 
+  // Create event modal state
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [createError, setCreateError] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [venue, setVenue] = useState("");
@@ -29,13 +34,25 @@ export default function EventsPage() {
   const [capacity, setCapacity] = useState("100");
   const [selectedClub, setSelectedClub] = useState("");
 
-  const canCreate = currentUser.role === "admin" || currentUser.is_club_lead;
+  // Registration modal state (User requirement: personal details required for registration)
+  const [registeringEvent, setRegisteringEvent] = useState<Event | null>(null);
+  const [regRollNo, setRegRollNo] = useState(currentUser.roll_no || "");
+  const [regDept, setRegDept] = useState("Computer Science & Engineering");
+  const [regSemester, setRegSemester] = useState(String(currentUser.semester || 4));
+  const [regPhone, setRegPhone] = useState(currentUser.phone || "");
+  const [regEmergency, setRegEmergency] = useState("+91-9876543200");
+  const [regNote, setRegNote] = useState("");
+  const [regSuccessNotice, setRegSuccessNotice] = useState<string | null>(null);
+
+  // User requirement: "block create events for students"
+  const canCreate = currentUser.role !== "student";
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
+    setCreateError("");
     if (!title || !startsAt) return;
 
-    createEvent({
+    const res = createEvent({
       title,
       description,
       venue,
@@ -46,10 +63,33 @@ export default function EventsPage() {
       category: "Campus Event",
     });
 
-    setCreateModalOpen(false);
-    setTitle("");
-    setDescription("");
-    setVenue("");
+    if (res.success) {
+      setCreateModalOpen(false);
+      setTitle("");
+      setDescription("");
+      setVenue("");
+    } else if (res.error) {
+      setCreateError(res.error);
+    }
+  };
+
+  const handleRegisterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!registeringEvent || !regRollNo || !regPhone) return;
+
+    registerForEvent(registeringEvent.id, {
+      roll_no: regRollNo,
+      department: regDept,
+      semester: parseInt(regSemester, 10) || 4,
+      phone: regPhone,
+      emergency_contact: regEmergency,
+      note: regNote,
+    });
+
+    setRegSuccessNotice(`Registered for "${registeringEvent.title}".`);
+    setRegisteringEvent(null);
+    setRegNote("");
+    setTimeout(() => setRegSuccessNotice(null), 4000);
   };
 
   const downloadIcs = (event: typeof events[0]) => {
@@ -85,13 +125,25 @@ END:VCALENDAR`;
             </p>
           </div>
 
-          {canCreate && (
+          {/* User requirement: "block create events for students" */}
+          {canCreate ? (
             <Button onClick={() => setCreateModalOpen(true)} className="gap-2">
               <Plus className="w-4 h-4" />
               <span>Create event</span>
             </Button>
+          ) : (
+            <span className="text-xs text-muted italic self-start sm:self-auto py-2">
+              Event creation is restricted to Faculty, Principal & Administration.
+            </span>
           )}
         </div>
+
+        {regSuccessNotice && (
+          <div className="p-4 bg-[#F0F5EE] border border-line rounded-card flex items-center gap-2 text-xs font-semibold text-ink">
+            <CheckCircle className="w-4 h-4 text-accent" />
+            <span>{regSuccessNotice}</span>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {events.map((evt) => {
@@ -145,32 +197,140 @@ END:VCALENDAR`;
                     <span>Add to calendar</span>
                   </button>
 
-                  <Button
-                    size="sm"
-                    variant={isGoing ? "secondary" : isWaitlist ? "secondary" : "primary"}
-                    onClick={() => toggleRsvp(evt.id)}
-                  >
-                    {isGoing
-                      ? "Cancel registration"
-                      : isWaitlist
-                      ? "Leave waiting list"
-                      : isFull
-                      ? "Join waiting list"
-                      : "Register"}
-                  </Button>
+                  {isGoing || isWaitlist ? (
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => cancelEventRegistration(evt.id)}
+                    >
+                      {isGoing ? "Cancel registration" : "Leave waiting list"}
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant="primary"
+                      onClick={() => {
+                        setRegisteringEvent(evt);
+                        setRegRollNo(currentUser.roll_no || "");
+                        setRegPhone(currentUser.phone || "");
+                      }}
+                    >
+                      {isFull ? "Join waiting list" : "Register with details"}
+                    </Button>
+                  )}
                 </div>
               </Card>
             );
           })}
         </div>
 
-        {/* Create Event Modal (FR-E3) */}
+        {/* Modal: Fill Necessary Personal Details for Event Registration */}
+        <Modal
+          isOpen={registeringEvent !== null}
+          onClose={() => setRegisteringEvent(null)}
+          title={`Register for ${registeringEvent?.title || "Event"}`}
+        >
+          <form onSubmit={handleRegisterSubmit} className="space-y-4">
+            <div className="p-3 bg-paper border border-line rounded text-xs text-muted">
+              Please verify your student identification and contact details for event attendance.
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <Input
+                label="Student Name"
+                value={currentUser.full_name}
+                disabled
+              />
+              <Input
+                label="University Roll Number"
+                value={regRollNo}
+                onChange={(e) => setRegRollNo(e.target.value)}
+                placeholder="e.g. CS2023-042"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-semibold text-text mb-1">Department</label>
+                <select
+                  value={regDept}
+                  onChange={(e) => setRegDept(e.target.value)}
+                  className="w-full min-h-[44px] p-2 bg-surface border border-line rounded-input text-sm text-text"
+                >
+                  <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                  <option value="Department of Physics">Department of Physics</option>
+                  <option value="Department of Chemistry">Department of Chemistry</option>
+                  <option value="Department of Mathematics">Department of Mathematics</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-text mb-1">Semester</label>
+                <select
+                  value={regSemester}
+                  onChange={(e) => setRegSemester(e.target.value)}
+                  className="w-full min-h-[44px] p-2 bg-surface border border-line rounded-input text-sm text-text"
+                >
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                    <option key={s} value={s}>
+                      Semester {s}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <Input
+                label="Contact Phone"
+                value={regPhone}
+                onChange={(e) => setRegPhone(e.target.value)}
+                placeholder="e.g. +91 9876543210"
+                required
+              />
+              <Input
+                label="Emergency Contact"
+                value={regEmergency}
+                onChange={(e) => setRegEmergency(e.target.value)}
+                placeholder="Guardian / Emergency Phone"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-text mb-1">
+                Dietary or Special Assistance (Optional)
+              </label>
+              <Input
+                value={regNote}
+                onChange={(e) => setRegNote(e.target.value)}
+                placeholder="e.g. Vegetarian preference, wheelchair access, etc."
+              />
+            </div>
+
+            <div className="pt-2 flex justify-end gap-2">
+              <Button type="button" variant="secondary" onClick={() => setRegisteringEvent(null)}>
+                Cancel
+              </Button>
+              <Button type="submit">Complete registration</Button>
+            </div>
+          </form>
+        </Modal>
+
+        {/* Modal: Create Event (Principal / Faculty / Admin only) */}
         <Modal
           isOpen={createModalOpen}
           onClose={() => setCreateModalOpen(false)}
           title="Create New Event"
         >
           <form onSubmit={handleCreate} className="space-y-4">
+            {createError && (
+              <div className="p-2.5 bg-[#FDF2F2] border border-[#F8D7DA] rounded text-xs text-emergency">
+                {createError}
+              </div>
+            )}
+
             <Input
               label="Event title"
               value={title}

@@ -13,6 +13,10 @@ import {
   Sparkles,
   Users,
   MessageSquare,
+  AlertTriangle,
+  HeartHandshake,
+  Contact,
+  FolderOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -36,11 +40,11 @@ export default function LandingPage() {
     {
       id: "safety",
       num: "01",
-      title: "Safety",
+      title: "Safety & Anti-Ragging",
       icon: ShieldAlert,
       text: "Send an alert in under 10 seconds. Choose what happened, share your location, confirm. You see who has picked it up and what they have done.",
       detail:
-        "Direct connection to on-duty campus security officers and hostel resident advisors. Truthful delivery states tell you exactly when security received the alert.",
+        "Direct connection to on-duty campus security officers and the Principal Anti-Ragging Committee with anonymous reporting.",
     },
     {
       id: "academics",
@@ -54,11 +58,11 @@ export default function LandingPage() {
     {
       id: "notices",
       num: "03",
-      title: "Notices",
+      title: "Notices & Documents",
       icon: Bell,
       text: "One official list for the whole university. Urgent notices stay at the top. You only see notices meant for your course, year and department.",
       detail:
-        "Categorized by holidays, exam schedules, workshops, and lost-and-found items. Publishers track read percentages.",
+        "Categorized by holidays, exam schedules, placement records, study materials, and rules & regulations.",
     },
     {
       id: "events",
@@ -81,11 +85,11 @@ export default function LandingPage() {
     {
       id: "messages",
       num: "06",
-      title: "Messages",
+      title: "Messages & Wellness",
       icon: MessageSquare,
-      text: "Write to your teachers, advisors and club leads. Block or report anyone who bothers you.",
+      text: "Write to your teachers, advisors and club leads. Access confidential mental health and student counseling support.",
       detail:
-        "Structured communication respecting campus boundaries. No spam, with instant moderation review.",
+        "Structured communication respecting campus boundaries. Includes confidential psychologist bookings and 24/7 helplines.",
     },
   ];
 
@@ -113,6 +117,12 @@ export default function LandingPage() {
             <a href="#who-its-for" className="hover:text-ink transition-colors">
               Who it's for
             </a>
+            <Link href="/directory" className="hover:text-ink transition-colors">
+              Faculty contacts
+            </Link>
+            <Link href="/documents" className="hover:text-ink transition-colors">
+              Documents
+            </Link>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -145,7 +155,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="text-base sm:text-lg text-muted leading-relaxed max-w-xl">
-            Check today's timetable, read official notices, join a club, or send an alert to campus security. Sign in with your university email.
+            Check today's timetable, read official notices, join a club, access anti-ragging support, or send an alert to campus security. Sign in with your university email.
           </p>
 
           <div className="pt-2 flex flex-wrap items-center gap-3">
@@ -216,7 +226,7 @@ export default function LandingPage() {
           </span>
           <h2 className="text-3xl font-heading font-bold text-ink mt-2">What's inside</h2>
           <p className="text-muted text-base mt-1">
-            Six focused sections covering all aspects of daily university life.
+            Integrated sections covering all aspects of daily university life.
           </p>
         </div>
 
@@ -338,7 +348,7 @@ export default function LandingPage() {
                       <span className="font-bold text-accent">Acknowledged</span>
                     </div>
                     <p className="text-sm font-semibold text-ink mt-1">
-                      Officer Singh has seen your alert and is on the way.
+                      The designated responder has seen your alert and is on the way.
                     </p>
                   </div>
 
@@ -368,7 +378,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 6. WHO IT'S FOR - Four blocks of unequal length in two staggered columns, no tabs */}
+      {/* 6. WHO IT'S FOR */}
       <section id="who-its-for" className="py-20 max-w-7xl mx-auto px-4 sm:px-6">
         <div className="mb-10">
           <span className="text-xs font-heading font-bold text-accent uppercase tracking-widest">
@@ -382,14 +392,16 @@ export default function LandingPage() {
             <div className="p-6 bg-surface border border-line rounded-card">
               <h3 className="text-xl font-heading font-bold text-ink mb-2">Students</h3>
               <p className="text-sm text-text leading-relaxed">
-                Open the app to see today's classes, new notices and events. Send an alert if you need help.
+                Open the app to see today's classes, new notices, events, and fees. File anti-ragging reports or send an alert if you need help.
               </p>
             </div>
 
             <div className="p-6 bg-surface border border-line rounded-card md:mt-4">
-              <h3 className="text-xl font-heading font-bold text-ink mb-2">Security</h3>
+              <h3 className="text-xl font-heading font-bold text-ink mb-2">
+                Principal and leadership
+              </h3>
               <p className="text-sm text-text leading-relaxed">
-                See the alerts assigned to you, with the location. Confirm, add notes, and close them in the app.
+                Lead the anti-ragging squad, oversee campus safety alerts, manage admissions and student fee records from one executive dashboard.
               </p>
             </div>
           </div>
@@ -398,7 +410,7 @@ export default function LandingPage() {
             <div className="p-6 bg-surface border border-line rounded-card">
               <h3 className="text-xl font-heading font-bold text-ink mb-2">Faculty</h3>
               <p className="text-sm text-text leading-relaxed">
-                Post a class change once. Students see it and confirm they have read it.
+                Post a class change once. Students see it and confirm they have read it. Share study materials and update consultation hours.
               </p>
             </div>
 
@@ -421,7 +433,7 @@ export default function LandingPage() {
             Sign in and check today.
           </h2>
           <p className="text-base text-muted">
-            Everything on campus, in one place. One sign-in for students, teachers, administrators and security.
+            Everything on campus, in one place. One sign-in for students, teachers, administrators and university leadership.
           </p>
 
           <div className="pt-2 flex justify-center gap-4">
@@ -439,6 +451,7 @@ export default function LandingPage() {
 
           <div className="pt-8 border-t border-line max-w-md mx-auto text-xs text-muted space-y-1">
             <p className="font-semibold text-ink">Campus Security Helpline: 06546-261234</p>
+            <p>Anti-Ragging Helpline: 1800-180-5522 • Tele-MANAS: 14416</p>
             <p>Vinoba Bhave University, Hazaribagh, Jharkhand 825301</p>
           </div>
         </div>

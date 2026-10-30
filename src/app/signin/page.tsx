@@ -33,11 +33,10 @@ export default function SignInPage() {
     if (matched) {
       setCurrentUser(matched);
       if (matched.role === "admin") router.push("/admin");
-      else if (matched.role === "security") router.push("/security");
+      else if (matched.role === "principal") router.push("/principal");
       else if (matched.role === "faculty") router.push("/faculty");
       else router.push("/student");
     } else {
-      // Allow custom email demo fallback
       const studentProfile = {
         ...INITIAL_PROFILES[0],
         email,
@@ -52,7 +51,7 @@ export default function SignInPage() {
     const profile = INITIAL_PROFILES.find((p) => p.role === role) || INITIAL_PROFILES[0];
     setCurrentUser(profile);
     if (role === "admin") router.push("/admin");
-    else if (role === "security") router.push("/security");
+    else if (role === "principal") router.push("/principal");
     else if (role === "faculty") router.push("/faculty");
     else router.push("/student");
   };
@@ -131,11 +130,11 @@ export default function SignInPage() {
               </button>
               <button
                 type="button"
-                onClick={() => handleQuickDemoSelect("security")}
+                onClick={() => handleQuickDemoSelect("principal")}
                 className="p-2.5 text-left border border-line rounded bg-paper hover:bg-[#EEF2FB] hover:border-accent transition-colors"
               >
-                <span className="block text-xs font-bold text-ink">Officer Singh</span>
-                <span className="block text-[11px] text-muted">Security Officer</span>
+                <span className="block text-xs font-bold text-ink">Prof. Sharma</span>
+                <span className="block text-[11px] text-muted">Principal</span>
               </button>
               <button
                 type="button"

@@ -6,13 +6,50 @@ import { useApp } from "@/lib/store";
 import { AppShell } from "@/components/shell/app-shell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Modal } from "@/components/ui/modal";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { Club } from "@/lib/database.types";
 
 export default function ClubsPage() {
-  const { clubs, currentUser, toggleJoinClub } = useApp();
+  const { clubs, currentUser, joinClubWithDetails, leaveClub } = useApp();
   const [selectedClubId, setSelectedClubId] = useState<string>(clubs[0]?.id || "");
 
+  // Club Join Modal State (personal details requirement)
+  const [joiningClub, setJoiningClub] = useState<Club | null>(null);
+  const [joinRollNo, setJoinRollNo] = useState(currentUser.roll_no || "");
+  const [joinDept, setJoinDept] = useState("Computer Science & Engineering");
+  const [joinSemester, setJoinSemester] = useState(String(currentUser.semester || 4));
+  const [joinPhone, setJoinPhone] = useState(currentUser.phone || "");
+  const [joinReason, setJoinReason] = useState("");
+  const [joinSkills, setJoinSkills] = useState("");
+  const [joinSuccessNotice, setJoinSuccessNotice] = useState<string | null>(null);
+
   const selectedClub = clubs.find((c) => c.id === selectedClubId) || clubs[0];
+
+  const handleJoinSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!joiningClub || !joinRollNo || !joinPhone || !joinReason) return;
+
+    joinClubWithDetails(joiningClub.id, {
+      roll_no: joinRollNo,
+      department: joinDept,
+      semester: parseInt(joinSemester, 10) || 4,
+      phone: joinPhone,
+      reason: joinReason,
+      skills: joinSkills,
+    });
+
+    setJoinSuccessNotice(
+      joiningClub.requires_approval
+        ? `Application submitted for "${joiningClub.name}". Society lead will review.`
+        : `Joined "${joiningClub.name}" as an active member.`
+    );
+    setJoiningClub(null);
+    setJoinReason("");
+    setJoinSkills("");
+    setTimeout(() => setJoinSuccessNotice(null), 4000);
+  };
 
   return (
     <AppShell>
@@ -25,6 +62,13 @@ export default function ClubsPage() {
             </p>
           </div>
         </div>
+
+        {joinSuccessNotice && (
+          <div className="p-4 bg-[#F0F5EE] border border-line rounded-card flex items-center gap-2 text-xs font-semibold text-ink">
+            <CheckCircle className="w-4 h-4 text-accent" />
+            <span>{joinSuccessNotice}</span>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Clubs Directory List */}
@@ -112,7 +156,7 @@ export default function ClubsPage() {
                   </div>
                 </div>
 
-                {/* Membership Action */}
+                {/* Membership Action (Requires personal details when joining) */}
                 <div className="pt-4 border-t border-line flex items-center justify-between">
                   <span className="text-xs text-muted">
                     {selectedClub.requires_approval
@@ -120,27 +164,130 @@ export default function ClubsPage() {
                       : "Open to all enrolled students"}
                   </span>
 
-                  <Button
-                    variant={
-                      selectedClub.user_membership_status === "active"
-                        ? "secondary"
-                        : "primary"
-                    }
-                    onClick={() => toggleJoinClub(selectedClub.id)}
-                  >
-                    {selectedClub.user_membership_status === "active"
-                      ? "Leave club"
-                      : selectedClub.user_membership_status === "pending"
-                      ? "Cancel request"
-                      : selectedClub.requires_approval
-                      ? "Request to join"
-                      : "Join club"}
-                  </Button>
+                  {selectedClub.user_membership_status === "active" ? (
+                    <Button variant="secondary" onClick={() => leaveClub(selectedClub.id)}>
+                      Leave club
+                    </Button>
+                  ) : selectedClub.user_membership_status === "pending" ? (
+                    <Button variant="secondary" onClick={() => leaveClub(selectedClub.id)}>
+                      Cancel request
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        setJoiningClub(selectedClub);
+                        setJoinRollNo(currentUser.roll_no || "");
+                        setJoinPhone(currentUser.phone || "");
+                      }}
+                    >
+                      {selectedClub.requires_approval ? "Apply with details" : "Join with details"}
+                    </Button>
+                  )}
                 </div>
               </Card>
             </div>
           )}
         </div>
+
+        {/* Modal: Fill Personal Details to Join Club */}
+        <Modal
+          isOpen={joiningClub !== null}
+          onClose={() => setJoiningClub(null)}
+          title={`Join ${joiningClub?.name || "Society"}`}
+        >
+          <form onSubmit={handleJoinSubmit} className="space-y-4">
+            <div className="p-3 bg-paper border border-line rounded text-xs text-muted">
+              Please provide your student details and motivation for joining this society.
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <Input
+                label="Full Name"
+                value={currentUser.full_name}
+                disabled
+              />
+              <Input
+                label="Roll Number"
+                value={joinRollNo}
+                onChange={(e) => setJoinRollNo(e.target.value)}
+                placeholder="e.g. CS2023-042"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-semibold text-text mb-1">Department</label>
+                <select
+                  value={joinDept}
+                  onChange={(e) => setJoinDept(e.target.value)}
+                  className="w-full min-h-[44px] p-2 bg-surface border border-line rounded-input text-sm text-text"
+                >
+                  <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                  <option value="Department of Physics">Department of Physics</option>
+                  <option value="Department of Chemistry">Department of Chemistry</option>
+                  <option value="Department of Mathematics">Department of Mathematics</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-text mb-1">Semester</label>
+                <select
+                  value={joinSemester}
+                  onChange={(e) => setJoinSemester(e.target.value)}
+                  className="w-full min-h-[44px] p-2 bg-surface border border-line rounded-input text-sm text-text"
+                >
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                    <option key={s} value={s}>
+                      Semester {s}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <Input
+              label="Contact Phone"
+              value={joinPhone}
+              onChange={(e) => setJoinPhone(e.target.value)}
+              placeholder="e.g. +91 9876543210"
+              required
+            />
+
+            <div>
+              <label className="block text-xs font-semibold text-text mb-1">
+                Reason for Joining / What interests you?
+              </label>
+              <textarea
+                value={joinReason}
+                onChange={(e) => setJoinReason(e.target.value)}
+                rows={2}
+                placeholder="Share why you want to participate in this club..."
+                className="w-full p-2.5 bg-surface border border-line rounded-input text-sm text-text focus:outline-none focus:border-accent"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-text mb-1">
+                Prior Experience, Skills or Instruments (Optional)
+              </label>
+              <Input
+                value={joinSkills}
+                onChange={(e) => setJoinSkills(e.target.value)}
+                placeholder="e.g. Debate tournaments, robotics, badminton, guitar..."
+              />
+            </div>
+
+            <div className="pt-2 flex justify-end gap-2">
+              <Button type="button" variant="secondary" onClick={() => setJoiningClub(null)}>
+                Cancel
+              </Button>
+              <Button type="submit">Submit membership application</Button>
+            </div>
+          </form>
+        </Modal>
       </div>
     </AppShell>
   );

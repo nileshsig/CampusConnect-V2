@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Manrope } from "next/font/google";
-import "@/styles/globals.css";
+import "./globals.css";
 import { AppProvider } from "@/lib/store";
 
 const inter = Inter({

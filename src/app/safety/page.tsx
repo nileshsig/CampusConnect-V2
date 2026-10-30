@@ -28,7 +28,7 @@ export default function SafetyHubPage() {
   const [submittedReport, setSubmittedReport] = useState(false);
 
   const myIncidents = incidents.filter(
-    (i) => i.reporter_id === currentUser.id || currentUser.role === "admin" || currentUser.role === "security"
+    (i) => i.reporter_id === currentUser.id || currentUser.role === "admin" || currentUser.role === "principal"
   );
 
   const handleReportSubmit = (e: React.FormEvent) => {
@@ -67,11 +67,11 @@ export default function SafetyHubPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="p-4 bg-surface border border-line rounded-card flex items-center justify-between">
             <div>
-              <p className="text-xs text-muted font-medium">Campus Security Command Post</p>
+              <p className="text-xs text-muted font-medium">Campus Security & Principal Dispatch</p>
               <p className="text-lg font-heading font-bold text-ink tabular-nums mt-0.5">
                 06546-261234
               </p>
-              <p className="text-xs text-muted">Available 24 hours at Main Gate</p>
+              <p className="text-xs text-muted">Available 24 hours at Main Gate & Office</p>
             </div>
             <a
               href="tel:06546261234"
