@@ -278,7 +278,9 @@ export interface CampusDocument {
 export interface StudentFeeRecord {
   id: string;
   student_id: string;
+  student_name?: string;
   student_roll_no: string;
+  department?: string;
   semester: number;
   academic_year: string;
   fee_type: 'tuition' | 'hostel' | 'examination' | 'library';
@@ -287,4 +289,5 @@ export interface StudentFeeRecord {
   due_date: string;
   receipt_number?: string;
   paid_at?: string;
+  payment_method?: string;
 }

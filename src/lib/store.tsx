@@ -135,6 +135,9 @@ interface AppContextType {
   // Student Fee Management
   feeRecords: StudentFeeRecord[];
   payFee: (feeId: string) => void;
+  recordOfflineFeePayment: (feeId: string, paymentMethod: string, transactionRef?: string) => void;
+  sendFeeReminder: (feeId: string) => void;
+  signOut: () => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -631,10 +634,58 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
               status: "paid",
               receipt_number: receipt,
               paid_at: new Date().toISOString().slice(0, 10),
+              payment_method: "Online Student Portal",
             }
           : fee
       )
     );
+  };
+
+  const recordOfflineFeePayment = (
+    feeId: string,
+    paymentMethod: string,
+    transactionRef?: string
+  ) => {
+    const receipt = `REC-VBU-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    setFeeRecords((prev) =>
+      prev.map((fee) =>
+        fee.id === feeId
+          ? {
+              ...fee,
+              status: "paid",
+              receipt_number: receipt,
+              paid_at: new Date().toISOString().slice(0, 10),
+              payment_method: transactionRef
+                ? `${paymentMethod} (Ref: ${transactionRef})`
+                : paymentMethod,
+            }
+          : fee
+      )
+    );
+  };
+
+  const sendFeeReminder = (feeId: string) => {
+    const fee = feeRecords.find((f) => f.id === feeId);
+    if (!fee) return;
+    const reminderNotif: NotificationItem = {
+      id: `notif-fee-${Date.now()}`,
+      user_id: fee.student_id,
+      kind: "urgent_notice",
+      title: `Fee Due Reminder: ${fee.fee_type.toUpperCase()}`,
+      body: `Your ${fee.fee_type} fee of INR ${fee.amount.toLocaleString()} is due on ${fee.due_date}. Please clear dues to prevent examination admit card hold.`,
+      link: "/fees",
+      read_at: null,
+      created_at: new Date().toISOString(),
+    };
+    setNotifications((prev) => [reminderNotif, ...prev]);
+  };
+
+  const signOut = () => {
+    // Reset to student default and navigate to signin
+    setCurrentUser(INITIAL_PROFILES[0]);
+    if (typeof window !== "undefined") {
+      window.location.href = "/signin";
+    }
   };
 
   const activeIncident =
@@ -689,6 +740,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         campusDocuments,
         feeRecords,
         payFee,
+        recordOfflineFeePayment,
+        sendFeeReminder,
+        signOut,
       }}
     >
       {children}

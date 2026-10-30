@@ -20,14 +20,16 @@ import {
   CreditCard,
   Contact,
   FolderOpen,
+  LogOut,
 } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { UserRole } from "@/lib/database.types";
 import { SOSFlowModal } from "@/components/safety/sos-flow-modal";
+import { CampusAIAssistant } from "@/components/ai/campus-ai-assistant";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { currentUser, switchRole, language, setLanguage, notifications } = useApp();
+  const { currentUser, signOut, language, setLanguage, notifications } = useApp();
   const [sosModalOpen, setSosModalOpen] = useState(false);
 
   const unreadNotifs = notifications.filter((n) => !n.read_at).length;
@@ -136,25 +138,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               {language === "en" ? "हिन्दी" : "English"}
             </button>
 
-            {/* Role switcher (Replaced Officer Singh with Principal) */}
-            <div className="flex items-center gap-1.5 bg-paper p-1 rounded-input border border-line">
-              <span className="text-xs text-muted font-medium pl-1 hidden md:inline">Account:</span>
-              {(["student", "faculty", "principal", "admin"] as UserRole[]).map((r) => (
-                <button
-                  key={r}
-                  onClick={() => switchRole(r)}
-                  className={`text-xs px-2 py-1 rounded font-medium transition-colors ${
-                    currentUser.role === r
-                      ? "bg-ink text-surface shadow-none"
-                      : "text-muted hover:text-text hover:bg-surface"
-                  }`}
-                >
-                  {r === "student" && "Asha (Student)"}
-                  {r === "faculty" && "Dr. Prasad (Faculty)"}
-                  {r === "principal" && "Prof. Sharma (Principal)"}
-                  {r === "admin" && "Admin"}
-                </button>
-              ))}
+            {/* Active User info and Sign out button (Role switcher inside app removed - must sign out to change role) */}
+            <div className="flex items-center gap-2">
+              <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded bg-paper border border-line text-xs">
+                <span className="w-2 h-2 rounded-full bg-accent"></span>
+                <span className="font-semibold text-ink">{currentUser.full_name}</span>
+                <span className="text-[11px] text-muted capitalize">({currentUser.role})</span>
+              </div>
+              <button
+                onClick={signOut}
+                className="text-xs px-2.5 py-1.5 rounded border border-line bg-paper text-muted hover:text-emergency hover:bg-surface font-medium flex items-center gap-1.5 transition-colors"
+                title="Sign out to change user or role"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="hidden md:inline">Sign out</span>
+              </button>
             </div>
 
             {/* SOS Primary Button */}
@@ -205,6 +203,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 </Link>
               );
             })}
+
+            <div className="pt-4 mt-4 border-t border-line">
+              <button
+                onClick={signOut}
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-button text-sm font-medium text-muted hover:text-emergency hover:bg-paper transition-colors"
+              >
+                <LogOut className="w-4 h-4 shrink-0" />
+                <span>Sign out</span>
+              </button>
+            </div>
           </nav>
         </aside>
 
@@ -244,6 +252,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </nav>
 
       <SOSFlowModal isOpen={sosModalOpen} onClose={() => setSosModalOpen(false)} />
+      <CampusAIAssistant />
     </div>
   );
 }

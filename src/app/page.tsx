@@ -19,6 +19,7 @@ import {
   FolderOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CampusAIAssistant } from "@/components/ai/campus-ai-assistant";
 
 // Client-only dynamic import of 3D Canvas so HTML text renders instantly
 const CampusModel = dynamic(
@@ -472,6 +473,7 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+      <CampusAIAssistant />
     </div>
   );
 }

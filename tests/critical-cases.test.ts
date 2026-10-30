@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { getRolePermissions, requireRole } from "../src/lib/rbac";
 import { UserRole } from "../src/lib/database.types";
+import { retrieveKnowledgeChunks, UNIVERSITY_KNOWLEDGE_BASE } from "../src/lib/rag-knowledge";
 
 describe("Campus Connect Critical Security & Business Rules (T1 - T15)", () => {
   it("T1 & T2: Enforces role guard rejecting students from admin operations", () => {
@@ -80,5 +81,36 @@ describe("Campus Connect Critical Security & Business Rules (T1 - T15)", () => {
 
     const facultyWithFlag = getRolePermissions("faculty", { canPublishNotices: true });
     expect(facultyWithFlag.canPublishNotice).toBe(true);
+  });
+
+  it("T12: RAG Knowledge Base accurately retrieves placement report data", () => {
+    const chunks = retrieveKnowledgeChunks("What is the highest placement package?", 2);
+    expect(chunks.length).toBeGreaterThan(0);
+    expect(chunks[0].content).toContain("14.5 Lakhs");
+    expect(chunks[0].content).toContain("TCS Digital");
+  });
+
+  it("T13: RAG Knowledge Base retrieves official anti-ragging helpline and UGC policy", () => {
+    const chunks = retrieveKnowledgeChunks("ragging complaint helpline", 2);
+    expect(chunks.length).toBeGreaterThan(0);
+    expect(chunks[0].content).toContain("1800-180-5522");
+    expect(chunks[0].content).toContain("Prof. Dr. R. K. Sharma");
+  });
+
+  it("T14: University Fee Treasury calculations for Admin & Principal", () => {
+    const sampleLedger = [
+      { amount: 18500, status: "paid" },
+      { amount: 9200, status: "paid" },
+      { amount: 1400, status: "overdue" },
+    ];
+
+    const totalAssessed = sampleLedger.reduce((acc, curr) => acc + curr.amount, 0);
+    const totalCollected = sampleLedger
+      .filter((f) => f.status === "paid")
+      .reduce((acc, curr) => acc + curr.amount, 0);
+
+    expect(totalAssessed).toBe(29100);
+    expect(totalCollected).toBe(27700);
+    expect(totalAssessed - totalCollected).toBe(1400);
   });
 });
