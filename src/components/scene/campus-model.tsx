@@ -30,17 +30,28 @@ function Building({
   const meshRef = useRef<THREE.Group>(null);
   const isSelected = activeSection === id || hovered === id;
 
-  // Visual tokens from Section 6.2
+  // Visual tokens
   const wallColor = "#FFFFFF";
   const roofColor = isSelected ? "#2A56C6" : "#152A4E";
   const trimColor = isSelected ? "#2A56C6" : "#152A4E";
 
   const [w, h, d] = size;
 
+  useFrame((state, delta) => {
+    if (!meshRef.current) return;
+    const targetY = position[1] + (isSelected ? 0.12 : 0);
+    meshRef.current.position.y = THREE.MathUtils.damp(
+      meshRef.current.position.y,
+      targetY,
+      10,
+      delta
+    );
+  });
+
   return (
     <group
       ref={meshRef}
-      position={[position[0], position[1] + (isSelected ? 0.08 : 0), position[2]]}
+      position={[position[0], position[1], position[2]]}
       onClick={(e) => {
         e.stopPropagation();
         onSelect(id);
@@ -102,17 +113,17 @@ function GroundSlab() {
       {/* Architectural ground slab */}
       <mesh position={[0, -0.15, 0]} receiveShadow>
         <boxGeometry args={[14, 0.3, 11]} />
-        <meshStandardMaterial color="#F7F8FA" roughness={0.9} />
+        <meshStandardMaterial color="#E8ECEF" roughness={0.9} />
       </mesh>
 
       {/* Campus walking paths (flat strips on slab) */}
       <mesh position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[0.8, 8]} />
-        <meshStandardMaterial color="#E1E5EB" />
+        <meshStandardMaterial color="#D9DFE6" />
       </mesh>
       <mesh position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} receiveShadow>
         <planeGeometry args={[0.8, 10]} />
-        <meshStandardMaterial color="#E1E5EB" />
+        <meshStandardMaterial color="#D9DFE6" />
       </mesh>
     </group>
   );
@@ -129,7 +140,11 @@ function SceneContent({
   hovered: string | null;
   setHovered: (id: string | null) => void;
 }) {
-  // Buildings definition matching Section 6.6
+  const groupRef = useRef<THREE.Group>(null);
+  const isDragging = useRef(false);
+  const previousMousePosition = useRef({ x: 0, y: 0 });
+
+  // 6 Campus Buildings matching Section 6.6 of PRD and screenshot
   const buildings = [
     {
       id: "safety",
@@ -143,21 +158,21 @@ function SceneContent({
       name: "Teaching Block",
       position: [-3.2, 0, 1.2] as [number, number, number],
       size: [2.6, 1.6, 1.8] as [number, number, number],
-      roofType: "flat" as const,
+      roofType: "pitched" as const,
     },
     {
       id: "notices",
       name: "Administrative Office",
       position: [3.2, 0, 1.2] as [number, number, number],
       size: [2.2, 1.4, 1.8] as [number, number, number],
-      roofType: "pitched" as const,
+      roofType: "flat" as const,
     },
     {
       id: "events",
       name: "Open-Air Stage & Auditorium",
       position: [2.8, 0, -2.6] as [number, number, number],
       size: [2.6, 0.8, 2.2] as [number, number, number],
-      roofType: "flat" as const,
+      roofType: "pitched" as const,
     },
     {
       id: "clubs",
@@ -175,12 +190,19 @@ function SceneContent({
     },
   ];
 
+  useFrame((state, delta) => {
+    // Gentle auto-rotation when user is not hovering or interacting
+    if (groupRef.current && !hovered) {
+      groupRef.current.rotation.y += delta * 0.08;
+    }
+  });
+
   return (
-    <>
-      <ambientLight intensity={0.8} />
+    <group ref={groupRef}>
+      <ambientLight intensity={0.85} />
       <directionalLight
-        position={[8, 12, 6]}
-        intensity={1.0}
+        position={[8, 14, 6]}
+        intensity={1.1}
         castShadow
         shadow-mapSize={[1024, 1024]}
         shadow-camera-left={-8}
@@ -188,6 +210,7 @@ function SceneContent({
         shadow-camera-top={8}
         shadow-camera-bottom={-8}
       />
+      <directionalLight position={[-6, 6, -6]} intensity={0.3} color="#E8ECEF" />
       <GroundSlab />
       {buildings.map((b) => (
         <Building
@@ -203,7 +226,7 @@ function SceneContent({
           setHovered={setHovered}
         />
       ))}
-    </>
+    </group>
   );
 }
 
@@ -240,7 +263,6 @@ export function CampusModel({
     messages: "Central Library & Clock Tower",
   };
 
-  // Fallback still architectural illustration if WebGL is unavailable (Section 6.6)
   if (!hasWebGL) {
     return (
       <div className="w-full h-full min-h-[350px] bg-paper border border-line rounded-card flex flex-col items-center justify-center p-6 text-center">
@@ -264,15 +286,15 @@ export function CampusModel({
         </div>
       )}
 
-      {/* Rotation hint badge */}
-      <div className="absolute bottom-3 right-3 z-10 px-2 py-1 bg-surface/90 border border-line rounded text-[11px] text-muted pointer-events-none">
+      {/* Rotation hint badge exactly matching the screenshot */}
+      <div className="absolute bottom-3 right-3 z-10 px-2.5 py-1 bg-surface/90 border border-line rounded text-[11px] text-muted pointer-events-none">
         Drag to turn
       </div>
 
       <Canvas
         shadows
         dpr={[1, 1.75]}
-        camera={{ position: [0, 8, 10], fov: 38 }}
+        camera={{ position: [0, 7.5, 9.5], fov: 38 }}
         style={{ pointerEvents: "auto" }}
       >
         <SceneContent

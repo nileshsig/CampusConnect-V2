@@ -148,7 +148,7 @@ export default function LandingPage() {
         <div className="w-full lg:w-5/12 space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-surface border border-line text-xs font-semibold text-ink">
             <span className="w-2 h-2 rounded-full bg-accent" />
-            Official Student & Staff Portal
+            Official Student &amp; Staff Portal
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-heading font-extrabold text-ink leading-[1.08] tracking-tight">
