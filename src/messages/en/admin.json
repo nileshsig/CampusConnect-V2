@@ -1,0 +1,19 @@
+{
+  "overview": "Overview",
+  "users": "Students and staff",
+  "importSpreadsheet": "Upload a spreadsheet",
+  "numbers": "Numbers",
+  "activityRecord": "Activity record",
+  "reportsToReview": "Reports to review",
+  "settings": "Settings",
+  "accountType": "Account type",
+  "flags": "Permissions and responsibilities",
+  "saveChanges": "Save changes",
+  "stats": {
+    "totalStudents": "Total students",
+    "activeAlerts": "Active safety alerts",
+    "noticesPublished": "Notices published",
+    "eventRegistrations": "Event sign-ups",
+    "avgResponseTime": "Average response time"
+  }
+}

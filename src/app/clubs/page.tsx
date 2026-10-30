@@ -1,0 +1,147 @@
+"use client";
+
+import React, { useState } from "react";
+import { Users, UserCheck, Shield, Plus, CheckCircle, Clock } from "lucide-react";
+import { useApp } from "@/lib/store";
+import { AppShell } from "@/components/shell/app-shell";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/status-badge";
+
+export default function ClubsPage() {
+  const { clubs, currentUser, toggleJoinClub } = useApp();
+  const [selectedClubId, setSelectedClubId] = useState<string>(clubs[0]?.id || "");
+
+  const selectedClub = clubs.find((c) => c.id === selectedClubId) || clubs[0];
+
+  return (
+    <AppShell>
+      <div className="space-y-6 max-w-5xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-heading font-bold text-ink">Clubs and Activities</h1>
+            <p className="text-sm text-muted">
+              Join university societies, sports groups, NSS, NCC, and innovation forums.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Clubs Directory List */}
+          <div className="lg:col-span-5 space-y-3">
+            <h2 className="text-xs font-heading font-bold text-muted uppercase tracking-wider">
+              Student societies ({clubs.length})
+            </h2>
+            {clubs.map((club) => {
+              const isSelected = club.id === selectedClub?.id;
+              const isMember = club.user_membership_status === "active";
+              const isPending = club.user_membership_status === "pending";
+
+              return (
+                <div
+                  key={club.id}
+                  onClick={() => setSelectedClubId(club.id)}
+                  className={`p-4 rounded-card border cursor-pointer transition-colors ${
+                    isSelected
+                      ? "bg-surface border-accent shadow-none"
+                      : "bg-surface border-line hover:border-accent"
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-semibold text-muted">{club.category}</span>
+                    {isMember && <StatusBadge status="active" label="Member" />}
+                    {isPending && <StatusBadge status="pending" label="Approval pending" />}
+                  </div>
+                  <h3 className="text-base font-heading font-bold text-ink">{club.name}</h3>
+                  <p className="text-xs text-muted mt-1 tabular-nums">
+                    {club.members_count} active members
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Selected Club Detailed Workspace */}
+          {selectedClub && (
+            <div className="lg:col-span-7">
+              <Card className="p-6 space-y-6">
+                <div>
+                  <span className="text-xs font-semibold text-accent uppercase tracking-wider">
+                    {selectedClub.category}
+                  </span>
+                  <h2 className="text-2xl font-heading font-bold text-ink mt-1">
+                    {selectedClub.name}
+                  </h2>
+                  <p className="text-sm text-muted mt-0.5 tabular-nums">
+                    {selectedClub.members_count} registered members
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className="text-sm font-heading font-bold text-ink">About</h3>
+                  <p className="text-sm text-text leading-relaxed font-normal">
+                    {selectedClub.description}
+                  </p>
+                </div>
+
+                {selectedClub.lead_name && (
+                  <div className="p-3 bg-paper border border-line rounded flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-ink text-surface flex items-center justify-center font-bold text-xs">
+                      {selectedClub.lead_name[0]}
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted">Society Lead</p>
+                      <p className="text-sm font-semibold text-ink">{selectedClub.lead_name}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Society Notice / Announcements */}
+                <div className="space-y-3 pt-4 border-t border-line">
+                  <h3 className="text-sm font-heading font-bold text-ink">
+                    Latest announcements
+                  </h3>
+                  <div className="p-3.5 bg-paper border border-line rounded space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-semibold text-ink">Weekly meeting & orientations</span>
+                      <span className="text-muted">Yesterday</span>
+                    </div>
+                    <p className="text-xs text-text">
+                      New member welcome and project distribution in Senate Hall at 4:30 PM this Friday.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Membership Action */}
+                <div className="pt-4 border-t border-line flex items-center justify-between">
+                  <span className="text-xs text-muted">
+                    {selectedClub.requires_approval
+                      ? "Requires society lead approval to join"
+                      : "Open to all enrolled students"}
+                  </span>
+
+                  <Button
+                    variant={
+                      selectedClub.user_membership_status === "active"
+                        ? "secondary"
+                        : "primary"
+                    }
+                    onClick={() => toggleJoinClub(selectedClub.id)}
+                  >
+                    {selectedClub.user_membership_status === "active"
+                      ? "Leave club"
+                      : selectedClub.user_membership_status === "pending"
+                      ? "Cancel request"
+                      : selectedClub.requires_approval
+                      ? "Request to join"
+                      : "Join club"}
+                  </Button>
+                </div>
+              </Card>
+            </div>
+          )}
+        </div>
+      </div>
+    </AppShell>
+  );
+}

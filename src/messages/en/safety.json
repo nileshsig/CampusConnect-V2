@@ -1,0 +1,51 @@
+{
+  "sosButton": "Send alert",
+  "sosEmergencyTitle": "Emergency alert",
+  "whatHappenedTitle": "What happened?",
+  "whereAreYouTitle": "Where are you?",
+  "checkAndSendTitle": "Check and send",
+  "alertStatusTitle": "Alert status",
+  "categories": {
+    "medical": "Medical emergency",
+    "personal_safety": "Personal safety",
+    "harassment": "Harassment",
+    "accident": "Accident",
+    "security_issue": "Security issue",
+    "other": "Other"
+  },
+  "location": {
+    "shareLocation": "Share my location",
+    "locating": "Getting your location...",
+    "locationShared": "Your location was captured",
+    "manualPlaceholder": "Type building, gate or room number (e.g. Science Block, Gate 2)",
+    "orManual": "Or enter your location manually:"
+  },
+  "states": {
+    "saved": "Alert saved. Sending it to security now.",
+    "queued": "Not sent yet. We keep trying. If it's urgent, call now.",
+    "delivered": "Security received your alert.",
+    "acknowledged": "Security has seen your alert and is on the way.",
+    "in_progress": "Security is actively responding.",
+    "resolved": "Alert has been resolved.",
+    "closed": "Alert closed.",
+    "failed": "Your alert did not go through. Call campus security now."
+  },
+  "rateLimitNotice": "You've sent several alerts in a few minutes. Call campus security if you still need help.",
+  "fallbacks": {
+    "callSecurity": "Call campus security",
+    "callNational": "Call emergency services"
+  },
+  "nonEmergency": {
+    "title": "Non-emergency safety report",
+    "subtitle": "Report campus hazards, broken lights, or maintenance safety concerns.",
+    "submitReport": "Submit report",
+    "reportSubmitted": "Report submitted. Safety team will review."
+  },
+  "responder": {
+    "assignedAlerts": "Alerts assigned to me",
+    "acknowledge": "Acknowledge",
+    "addNote": "Add note",
+    "markResolved": "Mark resolved",
+    "closeAlert": "Close alert"
+  }
+}

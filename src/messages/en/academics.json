@@ -1,0 +1,17 @@
+{
+  "title": "Academics",
+  "todayClasses": "Today's classes",
+  "weekSchedule": "Weekly timetable",
+  "deadlines": "Assignments and deadlines",
+  "examSeating": "Exam seating plan",
+  "roomChange": "Room change",
+  "cancelled": "Cancelled",
+  "rescheduled": "Rescheduled",
+  "scheduled": "Scheduled",
+  "postUpdate": "Post a class update",
+  "notesSharing": "Course study notes",
+  "emptyTimetable": "No classes scheduled for today.",
+  "emptyDeadlines": "No upcoming deadlines.",
+  "seatNumber": "Seat",
+  "roomNumber": "Room"
+}

@@ -1,0 +1,37 @@
+{
+  "appName": "कैम्पस कनेक्ट",
+  "universityName": "विनोबा भावे विश्वविद्यालय, हज़ारीबाग़",
+  "actions": {
+    "save": "सुरक्षित करें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "edit": "बदलें",
+    "close": "बंद करें",
+    "back": "वापस",
+    "search": "खोजें",
+    "confirm": "पुष्टि करें",
+    "view": "देखें",
+    "submit": "जमा करें",
+    "filter": "फ़िल्टर"
+  },
+  "navigation": {
+    "home": "होम",
+    "today": "आज",
+    "notices": "सूचनाएं",
+    "events": "कार्यक्रम",
+    "clubs": "क्लब",
+    "messages": "संदेश",
+    "safety": "सुरक्षा",
+    "profile": "प्रोफ़ाइल",
+    "overview": "अवलोकन",
+    "numbers": "आंकड़े",
+    "activityRecord": "गतिविधि रिकॉर्ड",
+    "reportsToReview": "समीक्षा के लिए रिपोर्ट",
+    "settings": "सेटिंग्स"
+  },
+  "pilotNotice": "जब तक विश्वविद्यालय आधिकारिक रूप से इस ऐप को नहीं अपनाता, आपात स्थिति में सुरक्षा हेल्पलाइन पर भी कॉल करें।",
+  "securityHelplineLabel": "कैम्पस सुरक्षा हेल्पलाइन",
+  "nationalEmergencyLabel": "राष्ट्रीय आपातकाल",
+  "language": "भाषा",
+  "signOut": "साइन आउट"
+}

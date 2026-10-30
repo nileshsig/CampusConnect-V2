@@ -1,0 +1,16 @@
+node_modules/
+.next/
+out/
+.vercel/
+coverage/
+playwright-report/
+test-results/
+.env
+.env.*
+!.env.example
+supabase/.branches/
+supabase/.temp/
+.agent/local/
+.agent/mcp.json
+*.log
+.DS_Store

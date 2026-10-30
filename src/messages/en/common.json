@@ -1,0 +1,37 @@
+{
+  "appName": "Campus Connect",
+  "universityName": "Vinoba Bhave University, Hazaribagh",
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "search": "Search",
+    "confirm": "Confirm",
+    "view": "View",
+    "submit": "Submit",
+    "filter": "Filter"
+  },
+  "navigation": {
+    "home": "Home",
+    "today": "Today",
+    "notices": "Notices",
+    "events": "Events",
+    "clubs": "Clubs",
+    "messages": "Messages",
+    "safety": "Safety",
+    "profile": "Profile",
+    "overview": "Overview",
+    "numbers": "Numbers",
+    "activityRecord": "Activity record",
+    "reportsToReview": "Reports to review",
+    "settings": "Settings"
+  },
+  "pilotNotice": "Until the university adopts this app, also call campus security in an emergency.",
+  "securityHelplineLabel": "Campus security helpline",
+  "nationalEmergencyLabel": "National emergency",
+  "language": "Language",
+  "signOut": "Sign out"
+}

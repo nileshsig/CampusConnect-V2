@@ -1,0 +1,13 @@
+{
+  "title": "Events",
+  "upcomingEvents": "Upcoming events",
+  "createEvent": "Create event",
+  "rsvp": "Register",
+  "cancelRsvp": "Cancel registration",
+  "waitlist": "Join waiting list",
+  "addToCalendar": "Add to calendar",
+  "capacity": "Capacity: {going} of {total} registered",
+  "statusGoing": "You are registered",
+  "statusWaitlist": "You are on the waiting list",
+  "emptyEvents": "No upcoming events scheduled."
+}

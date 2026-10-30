@@ -1,0 +1,15 @@
+{
+  "title": "Clubs",
+  "allClubs": "Student clubs and activities",
+  "join": "Join club",
+  "leave": "Leave club",
+  "requestJoin": "Request to join",
+  "pendingApproval": "Approval pending",
+  "joined": "Member",
+  "membersCount": "{count} members",
+  "leads": "Club leads",
+  "about": "About",
+  "announcements": "Club announcements",
+  "createClub": "Create new club",
+  "emptyClubs": "No clubs found."
+}

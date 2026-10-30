@@ -1,0 +1,26 @@
+{
+  "title": "Notices",
+  "allNotices": "All notices",
+  "urgentNotices": "Urgent notices",
+  "categories": {
+    "all": "All",
+    "holiday": "Holidays",
+    "exam": "Exams",
+    "lost_found": "Lost and found",
+    "workshop": "Workshops",
+    "general": "General",
+    "urgent": "Urgent"
+  },
+  "lostAndFound": {
+    "title": "Lost and found",
+    "reportItem": "Report an item",
+    "lost": "Lost item",
+    "found": "Found item",
+    "claim": "Claim this item",
+    "markResolved": "Mark resolved",
+    "empty": "No items reported currently."
+  },
+  "readRate": "Read by {percentage}% of students",
+  "publishNotice": "Publish official notice",
+  "emptyNotices": "No notices yet. New ones will show here."
+}

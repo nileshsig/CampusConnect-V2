@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "safety": "Safety",
+    "whatsInside": "What's inside",
+    "whoItsFor": "Who it's for",
+    "signIn": "Sign in",
+    "createAccount": "Create account"
+  },
+  "hero": {
+    "headline": "Campus news, classes and help in one app.",
+    "subline": "Check today's timetable, read official notices, join a club, or send an alert to campus security. Sign in with your university email.",
+    "signInButton": "Sign in",
+    "seeInsideButton": "See what's inside",
+    "pilotNotice": "Until the university adopts this app, also call campus security in an emergency."
+  },
+  "problem": {
+    "heading": "The problem",
+    "paragraph": "Right now, campus information is spread across WhatsApp groups, notice boards, email and word of mouth. A class moves to another room and you find out when you get there. An urgent notice goes out and half the batch misses it.",
+    "subline": "Staff answer the same question in five places."
+  },
+  "sections": {
+    "safety": {
+      "title": "Safety",
+      "text": "Send an alert in under 10 seconds. Choose what happened, share your location, confirm. You see who has picked it up and what they have done."
+    },
+    "academics": {
+      "title": "Academics",
+      "text": "Today's classes, room changes, deadlines and exam seats. When a class moves, you get told straight away."
+    },
+    "notices": {
+      "title": "Notices",
+      "text": "One official list for the whole university. Urgent notices stay at the top. You only see notices meant for your course, year and department."
+    },
+    "events": {
+      "title": "Events",
+      "text": "See what is on this month. Register, cancel, or add it to your calendar. If an event is full, you join the waiting list."
+    },
+    "clubs": {
+      "title": "Clubs",
+      "text": "Literature, sports, science, art, NSS, NCC, yoga and more. Join in one tap. Club leads post updates and events on their own page."
+    },
+    "messages": {
+      "title": "Messages",
+      "text": "Write to your teachers, advisors and club leads. Block or report anyone who bothers you."
+    }
+  },
+  "safetyDetail": {
+    "step1": "1. You pick what happened and share where you are.",
+    "step2": "2. Security and your hostel or department contact get the alert.",
+    "step3": "3. An officer confirms and you see their name.",
+    "guarantee": "The app shows \"received\" only after security has actually received it."
+  },
+  "whoItsFor": {
+    "students": {
+      "role": "Students",
+      "text": "Open the app to see today's classes, new notices and events. Send an alert if you need help."
+    },
+    "faculty": {
+      "role": "Faculty",
+      "text": "Post a class change once. Students see it and confirm they have read it."
+    },
+    "admin": {
+      "role": "Administrators and the registrar's office",
+      "text": "Send a notice to one department or the whole campus. See who has read it. Manage events, clubs and safety alerts from one place."
+    },
+    "security": {
+      "role": "Security",
+      "text": "See the alerts assigned to you, with the location. Confirm, add notes, and close them in the app."
+    }
+  },
+  "closing": {
+    "headline": "Sign in and check today.",
+    "address": "Vinoba Bhave University, Hazaribagh, Jharkhand 825301"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "title": "Messages",
+  "inbox": "Conversations",
+  "newMessage": "Start conversation",
+  "send": "Send",
+  "typeMessage": "Type a message...",
+  "blockUser": "Block person",
+  "reportMessage": "Report message",
+  "reportSent": "Report submitted for review",
+  "blockedNotice": "This person has been blocked",
+  "emptyMessages": "No messages yet. Select a conversation to start writing."
+}
